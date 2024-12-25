@@ -1,4 +1,4 @@
-# Radio Player
+# Internet Radio Jukebox
 ### Using media PC as audio player controlled from keyboard
 
 
@@ -7,9 +7,11 @@ linux: Ubuntu 22.04.5 LTS
 python: Python 3.10.12  
 user: nuc  
 folder:/home/nuc/MYPROJ/jukebox
+  
+    
+	
 
 #### Prepare
-
 ```
 sudo apt install python3-dev
 sudo apt install gcc
@@ -41,7 +43,6 @@ install packages
 ```
 pip install evdev
 pip install python-vlc
-
 ```
 or
 ```
@@ -56,19 +57,18 @@ source .venv/bin/activate
 python jukebox.py
 ```
 
-F5 - Start / Stop
-F6 - Volume up
-F7 - Volume down
+F5 - Start / Stop  
+F6 - Volume up  
+F7 - Volume down  
 
 
 #### Service
 
 ```
 sudo cp jukebox.service /etc/systemd/system/jukebox.service
-
 sudo systemctl daemon-reload 
-
 sudo systemctl enable jukebox 
+sudo systemctl start jukebox 
 ```
 
 
@@ -82,28 +82,3 @@ journalctl -u jukebox
 
 
 
----------------
-
-
-
-#### F5 pressed
-
-```
-event at 1735060264.801996, code 04, type 04, val 458814
-event at 1735060264.801996, code 63, type 01, val 01
-event at 1735060264.801996, code 00, type 00, val 00
-event at 1735060264.905995, code 04, type 04, val 458814
-event at 1735060264.905995, code 63, type 01, val 00
-event at 1735060264.905995, code 00, type 00, val 00
-```
-
-#### F6 pressed
-
-```
-event at 1735061376.547441, code 04, type 04, val 458815
-event at 1735061376.547441, code 64, type 01, val 01
-event at 1735061376.547441, code 00, type 00, val 00
-event at 1735061376.715284, code 04, type 04, val 458815
-event at 1735061376.715284, code 64, type 01, val 00
-event at 1735061376.715284, code 00, type 00, val 00
-```
