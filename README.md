@@ -1,5 +1,5 @@
 # Internet Radio Jukebox
-### Using media PC as audio player controlled from keyboard
+### Using media PC as audio player controlled from local keyboard
 
 
 #### Environment
