@@ -1,0 +1,17 @@
+[Unit]
+Description=Internet Radio Jukebox
+After=network.target
+
+[Service]
+User=nuc
+Group=nuc
+WorkingDirectory=/home/nuc/MYPROJ/jukebox
+Environment="PATH=/home/nuc/MYPROJ/jukebox/.venv/bin"
+ExecStart=/home/nuc/MYPROJ/jukebox/.venv/bin/python jukebox.py
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
