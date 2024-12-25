@@ -65,7 +65,7 @@ F7 - Volume down
 #### Service
 
 ```
-sudo cp jukebox.service /etc/systemd/system/jukebox.service
+sudo cp jukebox.service /etc/systemd/system/jukebox.service
 sudo systemctl daemon-reload 
 sudo systemctl enable jukebox 
 sudo systemctl start jukebox 
