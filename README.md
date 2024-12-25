@@ -52,6 +52,8 @@ pip install -r requirements.txt
 
 #### Run
 
+run test_kbd.py to find the keyboard, update the KBD constant in jukebox.py 
+
 ```
 source .venv/bin/activate
 python jukebox.py
