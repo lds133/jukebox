@@ -13,6 +13,7 @@ folder:/home/nuc/MYPROJ/jukebox
 
 #### Prepare
 ```
+sudo apt update
 sudo apt install python3-dev
 sudo apt install gcc
 sudo apt install ffmpeg

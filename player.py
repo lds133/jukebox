@@ -12,8 +12,11 @@ import subprocess
 class Player:
 
 
-    CMD_FFMPEG = [ "ffmpeg","-i","https://frequence3.net-radio.fr/frequence3-256.mp3","-f","wav","-acodec","pcm_s16le","-ar","44100","-ac","2","-"]
-    CMD_APLAY = ["aplay","-f","cd"]
+
+    CMD_FFMPEG = [ r"/usr/bin/ffmpeg","-i","https://frequence3.net-radio.fr/frequence3-256.mp3","-f","wav","-acodec","pcm_s16le","-ar","44100","-ac","2","-"]
+    CMD_APLAY = [r"/usr/bin/aplay","-f","cd"]
+    STR_AMIXER = r"/usr/bin/amixer"
+    
     
     DEFAULTVOLUME = 30
     VOLUMESTEP = 5
@@ -141,7 +144,7 @@ class Player:
             self.volume = 100
         if self.volume<0:
             self.volume = 0
-        VOLCMD = ["amixer","set","Master",("%i%%" % self.volume)]
+        VOLCMD = [self.STR_AMIXER,"set","Master",("%i%%" % self.volume)]
         print("Run:",VOLCMD)
         process = subprocess.Popen(VOLCMD, stdout=subprocess.PIPE)
         process.wait()

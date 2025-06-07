@@ -59,7 +59,7 @@ if __name__ == "__main__":
     KBD = "/dev/input/event4"   
     VOLUME = 30
     
-    print("* Inet Radio Jukebox * DEC 2024")
+    print("* Inet Radio Jukebox * JUN 2025")
     
     box = Jukebox(KBD,VOLUME)
     
