@@ -1,4 +1,7 @@
 
+
+
+import os
 import time
 from threading import Thread, Event
 import subprocess
@@ -12,7 +15,8 @@ class Player:
     CMD_FFMPEG = [ "ffmpeg","-i","https://frequence3.net-radio.fr/frequence3-256.mp3","-f","wav","-acodec","pcm_s16le","-ar","44100","-ac","2","-"]
     CMD_APLAY = ["aplay","-f","cd"]
     
-    VOLCMDTEMPLATE = "amixer set Master %i%%"
+    DEFAULTVOLUME = 30
+    VOLUMESTEP = 5
 
     def __init__(self):
     
@@ -22,12 +26,24 @@ class Player:
         self.threadstopped = None
         self.threadstarted = None
         self.iskilling = False
+        self.isstarting = False
+        self.volume = None 
         
         
     def Play(self):
+           
+        if (self.isstarting):
+            print(">>>","Thread start in progress")
+            return
+        if (self.iskilling):
+            print(">>>","Thread kill in progress")
+            return            
+
         if (self.IsPlaying):
+            print(">>>","Thread restart")
             self.Stop()
             
+        self.isstarting = True            
         self.iskilling = False
         self.p_ffmpeg = None
         self.p_aplay = None
@@ -38,7 +54,9 @@ class Player:
         self.threadstarted.wait()
         if not self.IsCmdRunning:
             self.Stop()
+            self.isstarting = False
             return False
+        self.isstarting = False
         return True
     
     @property
@@ -52,7 +70,6 @@ class Player:
             self.p_ffmpeg = subprocess.Popen(
                     self.CMD_FFMPEG, 
                     stdout=subprocess.PIPE,
-                    preexec_fn=os.setsid # detaches the subprocess from the terminal control group
                     )
         except Exception as e:
             print(">>>","Error ffmpeg", str(e))
@@ -66,6 +83,7 @@ class Player:
 
         self.threadstarted.set()
         if (self.IsCmdRunning):
+            print(">>>","Playing...")
             self.p_ffmpeg.wait()
             self.p_aplay.wait()
         self.threadstopped.set()
@@ -79,7 +97,11 @@ class Player:
             return True
         if self.iskilling:
             print(">>>","Thread kill in progress")
-            return True
+            return False
+        if self.isstarting:
+            print(">>>","Thread start in progress")
+            return False
+            
         print(">>>","Thread kill")
         self.iskilling = True
         if self.p_ffmpeg:
@@ -105,11 +127,28 @@ class Player:
         return True
         
     def ChangeVolume(self,dv):
-        cmd = self.VOLCMDTEMPLATE % dv
-        print("Run:",cmd)
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        assert dv==1 or dv==-1 or dv==0
+        if (self.volume==None):
+            self.volume = self.DEFAULTVOLUME
+        v = self.volume + (0 if dv==0 else (self.VOLUMESTEP if dv>0 else (-self.VOLUMESTEP)))
+        return self.SetVolume(v)
+
+
+        
+    def SetVolume(self,volume):
+        self.volume = volume
+        if self.volume>100:
+            self.volume = 100
+        if self.volume<0:
+            self.volume = 0
+        VOLCMD = ["amixer","set","Master",("%i%%" % self.volume)]
+        print("Run:",VOLCMD)
+        process = subprocess.Popen(VOLCMD, stdout=subprocess.PIPE)
         process.wait()
-        return dv
+        return self.volume        
+        
+        
+        
         
     @property
     def IsPlaying(self):
@@ -135,6 +174,10 @@ if __name__ == "__main__":
     
     print("----------------- SLEEP")
     time.sleep(15)
-    
+
     box.Stop()
     
+    print("*** ")    
+    print("*** Warning: after the test the terminal get corrupted ")    
+    print("*** To unstuck it type 'reset<enter>' (symbols will not be shown)")    
+    print("*** ")    

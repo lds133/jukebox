@@ -22,9 +22,10 @@ class Jukebox():
     KEY_F10		=	68
 
 
-    def __init__(self, kbddevice, m3ufile):
+    def __init__(self, kbddevice, defaultvolume ):
         self.kbd = Keyboard(kbddevice,self)
-        self.aud = Player(m3ufile)
+        self.aud = Player()
+        self.aud.SetVolume(defaultvolume)
         
         
     def OnKeyPressed(self,code,val):
@@ -55,12 +56,12 @@ class Jukebox():
         
 if __name__ == "__main__":
         
-    KBD = "/dev/input/event4"        
-    M3U = "test.m3u"
+    KBD = "/dev/input/event4"   
+    VOLUME = 30
     
     print("* Inet Radio Jukebox * DEC 2024")
     
-    box = Jukebox(KBD,M3U)
+    box = Jukebox(KBD,VOLUME)
     
     while True:
         time.sleep(60)
