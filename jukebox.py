@@ -57,7 +57,7 @@ class Jukebox():
 if __name__ == "__main__":
         
     KBD = "/dev/input/event4"   
-    VOLUME = 30
+    VOLUME = 70
     
     print("* Inet Radio Jukebox * JUN 2025")
     
