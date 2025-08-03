@@ -56,10 +56,25 @@ class Jukebox():
         
 if __name__ == "__main__":
         
-    KBD = "/dev/input/event4"   
-    VOLUME = 70
+        
+    kbd_name_part = "RPI Wired Keyboard"
+    kbd_phys_part = "input0"
+        
+        
+    print("* Inet Radio Jukebox * AUG 2025")
     
-    print("* Inet Radio Jukebox * JUN 2025")
+    KBD = None
+    while True:
+        KBD = Keyboard.FindPath(kbd_name_part,kbd_phys_part)
+        if (KBD == None):
+            n = 300
+            print("Keyboard not found. Sleep %i sec before retry." % n)
+            time.sleep(n)
+        else:
+            print("Using keyboard: %s" % KBD)
+            break
+    
+    VOLUME = 70
     
     box = Jukebox(KBD,VOLUME)
     

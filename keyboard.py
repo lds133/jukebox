@@ -10,6 +10,19 @@ class Keyboard:
 
     RESTART_DELAY_SEC = 30
 
+    @staticmethod
+    def FindPath(KBD_MARK_NAME,KBD_MARK_PHYS):
+        for device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
+            if KBD_MARK_NAME==None or len(KBD_MARK_NAME)==0 or (KBD_MARK_NAME in device.name):
+                if KBD_MARK_PHYS==None or len(KBD_MARK_PHYS)==0 or (KBD_MARK_PHYS in device.phys):
+                    return device.path
+        return None
+    
+    @staticmethod
+    def PrintAll():
+        for device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
+            print(device.path," : ", device.name," - ", device.phys)  
+
 
     def __init__(self, devicepath, client ):
         self.devicepath = devicepath
@@ -50,6 +63,12 @@ class Keyboard:
             
 if __name__ == "__main__":
 
-    KBD = "/dev/input/event4"
-    kbd = Keyboard(KBD,None)
-    input("Press enter to continue...\n\n")
+    KBD = Keyboard.FindPath("RPI Wired Keyboard","input0")
+    if KBD!=None:
+        kbd = Keyboard(KBD,None)
+        input("Press enter to continue...\n\n")
+    else:
+        print("Keyboard not found\n")
+        devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+        for device in devices:
+            print(device.path," : ", device.name," - ", device.phys)        
