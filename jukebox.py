@@ -1,9 +1,8 @@
 
 import time
-import datetime
 from keyboard import Keyboard
 from player import Player
-
+from alarm import Alarm
 
 
 
@@ -66,48 +65,7 @@ class Jukebox():
         
         
         
-class Alarm():
 
-
-    class Entry():
-        def __init__(self, key:int, hours:int, mins:int ):
-            self.KEY = key
-            self.H = hours
-            self.M = mins
-            self.lastchecktime = None
-            self.Check()
-            
-        def Check(self):
-            now = datetime.datetime.now()
-            key = Jukebox.KEY_FAKE_NONE
-
-            if (self.lastchecktime != None):
-                chk = self.lastchecktime
-                alr1 = datetime.datetime(chk.year,chk.month,chk.day,self.H,self.M,0)
-                alr2 = datetime.datetime(now.year,now.month,now.day,self.H,self.M,0)
-                if (alr1>=chk) and (alr1<now):
-                    key = self.KEY
-                if (alr2>=chk) and (alr2<now):
-                    key = self.KEY
-                #print("Check ",chk," - ",now, "   ",alr1," , ",alr2, " -> ",key)
-
-            self.lastchecktime = now
-            return key
-            
-            
-
-    def __init__(self ):
-        self.alarms = []
-        
-    def Add(self, key:int, hours:int, mins:int):
-        self.alarms.append ( Alarm.Entry(key,hours,mins) )
-
-    def Check(self)->int:
-        for a in self.alarms:
-            key = a.Check()
-            if (key!=Jukebox.KEY_FAKE_NONE):
-                return key
-        return Jukebox.KEY_FAKE_NONE
 
 
         
@@ -135,8 +93,8 @@ if __name__ == "__main__":
     VOLUME = 70
     
     box = Jukebox(KBD,VOLUME)
-    alarm = Alarm()
-    alarm.Add(Jukebox.KEY_FAKE_STOP,23,00) # automatic turn off at 23:00
+    alarm = Alarm(Jukebox.KEY_FAKE_NONE)
+    alarm.Add(Jukebox.KEY_FAKE_STOP,23,00) # automatic turn off at night
     
     while True:
         box.KeyPress( alarm.Check() )
